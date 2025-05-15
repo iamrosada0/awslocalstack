@@ -7,6 +7,9 @@ variable "secret_key" {
 variable "region" {
   type = string
 }
+variable "localstack_endpoint" {
+  type = string
+}
 provider "aws" {
   access_key                  = var.access_key
   secret_key                  = var.secret_key
@@ -18,7 +21,7 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    s3             = "http://localhost:4566"
+    s3             = var.localstack_endpoint
   }
 }
 
