@@ -4,7 +4,9 @@ variable "access_key" {
 variable "secret_key" {
   type = string
 }
-
+variable "region" {
+  type = string
+}
 provider "aws" {
   access_key                  = "mock_access_key"
   secret_key                  = "mock_secret_key"
