@@ -10,6 +10,9 @@ variable "region" {
 variable "localstack_endpoint" {
   type = string
 }
+variable "bucket_name" {
+  type = string
+}
 provider "aws" {
   access_key                  = var.access_key
   secret_key                  = var.secret_key
@@ -26,5 +29,5 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "test-bucket" {
-  bucket = "my-bucket"
+  bucket = var.bucket_name
 }
