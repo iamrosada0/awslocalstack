@@ -1,3 +1,7 @@
+variable "access_key" {
+  type = string
+}
+
 provider "aws" {
   access_key                  = "mock_access_key"
   secret_key                  = "mock_secret_key"
