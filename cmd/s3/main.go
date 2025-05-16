@@ -13,21 +13,21 @@ import (
 )
 
 func main() {
-
 	ctx := context.Background()
 	bucketName := os.Getenv("S3_BUCKET")
+	localstackEndpoint := os.Getenv("LOCALSTACK_ENDPOINT")
+	region := os.Getenv("AWS_DEFAULT_REGION")
 
-	cfg, err := config.LoadDefaultConfig(ctx)
+	cfg, err := config.LoadDefaultConfig(ctx, config.WithRegion(region))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Create an Amazon S3 service client
 	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
-		o.BaseEndpoint = aws.String(os.Getenv("LOCALSTACK_ENDPOINT"))
+		o.BaseEndpoint = aws.String(localstackEndpoint)
+		o.UsePathStyle = true
 	})
 
-	// Get the first page of results for ListObjectsV2 for a bucket
 	output, err := client.GetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(bucketName),
 		Key:    aws.String("go.mod"),
@@ -35,13 +35,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer output.Body.Close()
 
 	b, err := io.ReadAll(output.Body)
-
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println(string(b))
-
 }
