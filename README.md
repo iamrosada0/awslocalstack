@@ -1,56 +1,72 @@
+# 📨 AWS SQS & S3 with LocalStack, Terraform, and Go
 
+> **TL;DR**: Simulate AWS S3 and SQS locally using LocalStack, manage infrastructure with Terraform, and interact with services using Go programs—all without an AWS account.
 
-# 📨 AWS SQS & S3 with LocalStack + Go
-
-This project demonstrates how to use **LocalStack** to simulate AWS services (S3 and SQS) locally, with a Terraform configuration to create an S3 bucket and Go programs to interact with S3 and SQS. The setup is tailored for a **WSL2** environment on Windows, using Docker Desktop to run LocalStack. This README provides a comprehensive guide to setting up, testing, and troubleshooting the project, including all necessary commands.
+This project provides a complete setup to test **AWS S3** and **SQS** locally using **LocalStack**, with **Terraform** for infrastructure provisioning and **Go** programs for service interaction. Tailored for **WSL2** on Windows with Docker Desktop, this README offers step-by-step instructions, commands, and troubleshooting tips for a seamless experience.
 
 ---
 
-## Table of Contents
+## 📋 Table of Contents
+
 1. [Overview](#overview)
 2. [Prerequisites](#prerequisites)
+   - [Docker Desktop](#docker-desktop)
+   - [Terraform](#terraform)
+   - [Go](#go)
+   - [AWS CLI](#aws-cli)
 3. [Project Structure](#project-structure)
 4. [Setup Instructions](#setup-instructions)
-5. [Environment Variables](#environment-variables)
-6. [Terraform Configuration](#terraform-configuration)
-7. [Go Programs](#go-programs)
-8. [Test the Setup](#test-the-setup)
-9. [Troubleshooting](#troubleshooting)
-10. [Go SDK Issues](#go-sdk-issues)
+   - [Start LocalStack](#start-localstack)
+   - [Set Environment Variables](#set-environment-variables)
+5. [Terraform Configuration](#terraform-configuration)
+   - [Main Configuration](#main-configuration)
+   - [Apply Terraform](#apply-terraform)
+6. [Go Programs](#go-programs)
+   - [S3 Program](#s3-program)
+   - [SQS Program](#sqs-program)
+7. [Test the Setup](#test-the-setup)
+   - [Test S3](#test-s3)
+   - [Test SQS](#test-sqs)
+8. [Troubleshooting](#troubleshooting)
+   - [S3 Issues](#s3-issues)
+   - [SQS Issues](#sqs-issues)
+9. [Go SDK Issues](#go-sdk-issues)
+10. [Known Issues & Workarounds](#known-issues--workarounds)
 
 ---
-## Overview
-The project uses LocalStack to emulate AWS S3 and SQS services locally. It includes:
-- A **Terraform** configuration to create an S3 bucket (`my-test-bucket`).
-- A **Go program** (`cmd/s3/main.go`) to upload and retrieve a file (`go.mod`) from the S3 bucket.
-- A **Go program** (`cmd/sqs/main.go`) to send, receive, and delete messages from an SQS queue (`my-custom-sqs-queue`).
-- Environment variables to configure LocalStack endpoints, credentials, and resource names.
 
-The setup is designed for **WSL2** with Docker Desktop, where LocalStack runs on `localhost:4566`. The project has been tested with LocalStack version `4.4.1.dev15`.
+## 🌟 Overview
+
+This project demonstrates how to emulate AWS services locally using **LocalStack**, provision infrastructure with **Terraform**, and interact with services via **Go**. It’s designed for developers who want to test AWS workflows without incurring cloud costs. Key components include:
+
+- **LocalStack**: Simulates AWS S3 and SQS on `localhost:4566`.
+- **Terraform**: Creates an S3 bucket (`my-test-bucket`) locally.
+- **Go Programs**:
+  - `cmd/s3/main.go`: Uploads and retrieves a file (`go.mod`) from S3.
+  - `cmd/sqs/main.go`: Sends, receives, and deletes messages from an SQS queue (`my-custom-sqs-queue`).
+- **Environment**: Optimized for WSL2 on Windows with Docker Desktop, tested with LocalStack `4.4.1.dev15` (with a recommendation for `3.8.1` for stability).
+
+The goal is to provide a lightweight, cost-free environment for testing AWS integrations.
 
 ---
 
-## Prerequisites
-- **Docker Desktop** with WSL2 integration enabled.
-- **Terraform** (`>= 1.5.0`) installed.
-- **Go** (`>= 1.20`) installed.
-- **AWS CLI** (`>= 2.0`) installed.
-- **WSL2** on Windows (Ubuntu distribution recommended).
-- **LocalStack** Docker container running.
+## 🛠️ Prerequisites
 
-### Install Prerequisites
-## 1. **Docker Desktop**:
-   - Install from [Docker Desktop](https://www.docker.com/products/docker-desktop/).
-   - Enable WSL2 integration in Docker Desktop settings.
-## 2. **Terraform**
+Before starting, ensure the following tools are installed and configured:
+
+- **Docker Desktop**:
+  - Install from [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+  - Enable WSL2 integration in Docker Desktop settings under **Resources > WSL Integration**.
+- **Terraform** (>= 1.5.0):
 
 ```bash
-sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
-wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt-get update && sudo apt-get install terraform
-terraform -version
+  sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+  wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+  sudo apt-get update && sudo apt-get install terraform
+  terraform -version
 ```
+---
 
 ## Go
 
