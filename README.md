@@ -14,7 +14,7 @@ This project demonstrates how to use **LocalStack** to simulate AWS services (S3
 5. [Environment Variables](#environment-variables)
 6. [Terraform Configuration](#terraform-configuration)
 7. [Go Programs](#go-programs)
-8. [Testing the Setup](#testing-the-setup)
+8. [Test the Setup](#testing-the-setup)
 9. [Troubleshooting](#troubleshooting)
 10. [Known Issues](#known-issues)
 
