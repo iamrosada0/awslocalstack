@@ -1,6 +1,6 @@
 
 
-### 📨 AWS SQS & S3 with LocalStack + Go
+# 📨 AWS SQS & S3 with LocalStack + Go
 
 This project demonstrates how to use **LocalStack** to simulate AWS services (S3 and SQS) locally, with a Terraform configuration to create an S3 bucket and Go programs to interact with S3 and SQS. The setup is tailored for a **WSL2** environment on Windows, using Docker Desktop to run LocalStack. This README provides a comprehensive guide to setting up, testing, and troubleshooting the project, including all necessary commands.
 
