@@ -1,17 +1,30 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+}
 variable "access_key" {
-  type = string
+  type    = string
+  default = "dummy"
 }
 variable "secret_key" {
-  type = string
+  type    = string
+  default = "dummy"
 }
 variable "region" {
-  type = string
+  type    = string
+  default = "us-west-2"
 }
 variable "localstack_endpoint" {
-  type = string
+  type    = string
+  default = "http://localhost:4566"
 }
 variable "bucket_name" {
-  type = string
+  type    = string
+  default = "my-test-bucket"
 }
 provider "aws" {
   access_key                  = var.access_key
@@ -24,7 +37,7 @@ provider "aws" {
   skip_requesting_account_id  = true
 
   endpoints {
-    s3             = var.localstack_endpoint
+    s3 = var.localstack_endpoint
   }
 }
 
