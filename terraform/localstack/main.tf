@@ -43,6 +43,7 @@ provider "aws" {
 
   endpoints {
     s3 = var.localstack_endpoint
+    sqs= var.localstack_endpoint
   }
 }
 
