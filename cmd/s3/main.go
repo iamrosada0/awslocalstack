@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -26,15 +28,20 @@ func main() {
 	})
 
 	// Get the first page of results for ListObjectsV2 for a bucket
-	output, err := client.ListObjectsV2(ctx, &s3.ListObjectsV2Input{
+	output, err := client.GetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(bucketName),
+		Key:    aws.String("go.mod"),
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println("first page results")
-	for _, object := range output.Contents {
-		log.Printf("key=%s size=%d", aws.ToString(object.Key), *object.Size)
+	b, err := io.ReadAll(output.Body)
+
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	fmt.Println(string(b))
+
 }
